@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:54:30 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/04/29 12:17:49 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/04/29 15:04:21 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,13 +24,13 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char const *s1, char const *s2, int limit)
 {
 	int		size;
 	char	*ptr;
 	int		i;
 	int		j;
+	int		end;
 
 	size = ft_strlen(s1) + ft_strlen(s2);
 	ptr = (char *)malloc(sizeof(char) * (size + 1));
@@ -38,16 +38,24 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		return (NULL);
 	i = 0;
 	j = 0;
+	end = 0;
 	while (s1[i])
 	{
-		ptr[i] = s1[i];
+		if (s1[i] != '\n')
+		{
+			ptr[i] = s1[i];
+			end = 1;
+		}
 		i++;
 	}
 	while (s2[j])
 	{
-		ptr[i] = s2[j++];
-		i++;
+		if (s2[j] != '\n' && end != 1 && i < limit)
+		{
+			ptr[i] = s2[j];
+			i++;
+		}
+		j++;
 	}
-	ptr[i] = '\0';
 	return (ptr);
 }

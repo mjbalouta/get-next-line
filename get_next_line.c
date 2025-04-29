@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 22:55:55 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/04/29 12:48:50 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/04/29 15:04:46 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,25 +23,25 @@ char	*get_next_line(int fd)
 	static char	remainder[BUFFER_SIZE];
 	int			y;
 	int			bytes_read;
+	int			limit;
 
 	i = 0;
 	z = 0;
 	y = 0;
 	first = 1;
+	limit = 0;
 	while (buffer[i] != '\n' || first == 1)
 	{
-		if (i >= bytes_read || first == 1)
+		if (i > bytes_read || first == 1)
 		{
 			bytes_read = read(fd, buffer, BUFFER_SIZE);
 			i = 0;
 		}
+		while (buffer[limit] != '\n' && buffer[limit])
+				limit++;
 		if (first == 1)
 		{
-			while (buffer[i] != '\n' && buffer[i])
-				i++;
 			str = (char *)malloc(sizeof(char) * (i + 1));
-			str[i] = '\0';
-			i = 0;
 			first = 0;
 		}
 		if (buffer[i] == '\n')
@@ -52,11 +52,14 @@ char	*get_next_line(int fd)
 				y++;
 				i++;
 			}
+			str[i] = '\0';
 			return (str);
 		}
-		str = ft_strjoin(str, buffer);	
-		i = i + BUFFER_SIZE;	
+		if (buffer[i] != '\n')
+			str = ft_strjoin(str, buffer, limit);	
+		i = i + (BUFFER_SIZE - 1);	
 	}
+	str[i] = '\0';
 	return (str);
 }
 
