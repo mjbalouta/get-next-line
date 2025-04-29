@@ -6,7 +6,11 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 22:55:55 by mjoao-fr          #+#    #+#             */
+<<<<<<< HEAD
 /*   Updated: 2025/04/29 15:04:46 by mjoao-fr         ###   ########.fr       */
+=======
+/*   Updated: 2025/04/29 23:14:25 by mjoao-fr         ###   ########.fr       */
+>>>>>>> 1188961 (strjoin working fine, but printing is still a mess)
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +28,7 @@ char	*get_next_line(int fd)
 	int			y;
 	int			bytes_read;
 	int			limit;
+	int			size;
 
 	i = 0;
 	z = 0;
@@ -55,9 +60,9 @@ char	*get_next_line(int fd)
 			str[i] = '\0';
 			return (str);
 		}
-		if (buffer[i] != '\n')
-			str = ft_strjoin(str, buffer, limit);	
-		i = i + (BUFFER_SIZE - 1);	
+		str = ft_strjoin(str, buffer);
+		size = ft_strlen(str) - bytes_read;
+		i = i + size;
 	}
 	str[i] = '\0';
 	return (str);
