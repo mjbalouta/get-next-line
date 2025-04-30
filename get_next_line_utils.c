@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:54:30 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/04/30 14:23:58 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/04/30 23:28:48 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,69 +24,51 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-// char	*ft_strjoin(char const *s1, char const *s2, int limit)
-// {
-// 	int		size;
-// 	char	*ptr;
-// 	int		i;
-// 	int		j;
-// 	int		end;
-
-// 	size = ft_strlen(s1) + ft_strlen(s2);
-// 	ptr = (char *)malloc(sizeof(char) * (size + 1));
-// 	if (!ptr)
-// 		return (NULL);
-// 	i = 0;
-// 	j = 0;
-// 	end = 0;
-// 	while (s1[i])
-// 	{
-// 		if (s1[i] != '\n')
-// 		{
-// 			ptr[i] = s1[i];
-// 			i++;
-// 		}
-// 		if (i >= limit)
-// 			end = 1;
-// 	}
-// 	while (s2[j])
-// 	{
-// 		if (s2[j] == '\n' && end != 1)
-// 			return (ptr);
-// 		ptr[i++] = s2[j++];
-// 	}
-// 	return (ptr);
-// }
-char	*ft_strndup(const char *s, int limit)
+char	*ft_strjoin(char const *s1, char const *s2)
 {
+	int		size;
 	char	*ptr;
-	int		len;
 	int		i;
+	int		j;
+
+	size = ft_strlen(s1) + ft_strlen(s2);
+	ptr = (char *)ft_calloc((size + 1), sizeof(char));
+	if (!ptr)
+		return (NULL);
+	i = 0;
+	j = 0;
+	while (s1[i])
+	{
+		if (s1[i] != '\n')
+		{
+			ptr[i] = s1[i];
+			i++;
+		}
+	}
+	while (s2[j])
+	{
+		ptr[i++] = s2[j++];
+	}
+	return (ptr);
+}
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+	size_t	i;
+	char	*temp;
 
 	i = 0;
-	len = ft_strlen(s);
-	ptr = (char *)malloc(sizeof(char) * (len + 1));
-	if (ptr == NULL)
-	{
+	if (size != 0 && nmemb > (__SIZE_MAX__ / size))
 		return (NULL);
-	}
-	while (i < len && i < limit)
+	ptr = malloc(nmemb * size);
+	if (ptr == NULL)
+		return (NULL);
+	temp = (char *)ptr; 
+	while (i < (nmemb * size))
 	{
-		ptr[i] = s[i];
+		temp[i] = '\0';
 		i++;
-	}
-	ptr[i] = '\0';
+	}	
 	return (ptr);
 }
 
-char	*ft_strchr(const char *s, int c)
-{
-	int	i;
-
-	i = 0;
-	while (s[i] && s[i] != (char )c)
-		i++;
-	if (s[i] == (char )c || !c)
-		return ((char *)(s + i));
-	return (NULL);
-}
