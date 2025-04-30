@@ -5,29 +5,63 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/04/30 12:08:03 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/04/30 14:24:00 by mjoao-fr         ###   ########.fr       */
+/*   Created: 2025/04/28 22:55:55 by mjoao-fr          #+#    #+#             */
+/*   Updated: 2025/04/30 11:13:29 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-# define BUFFER_SIZE 2
+# define BUFFER_SIZE 3
 
 char	*get_next_line(int fd)
 {
-	static char	*remainder;
 	char		buffer[BUFFER_SIZE];
-	char		*line;
 	int			i;
+	int			first;
+	char		*str;
+	int			z;
+	static char	remainder[BUFFER_SIZE];
+	int			y;
+	int			bytes_read;
+	int			limit;
+	int			size;
 
 	i = 0;
-	read(fd, buffer, BUFFER_SIZE);
-	while (buffer[i] && buffer[i] != '\0')
-		i++;
-	line = (char *)malloc(sizeof(char) * (i + 1));
-	ft_strndup(buffer, ft_strchr(buffer, '\n') - buffer);
-	remainder = ft_strchr(buffer, '\n') + 1;
-	return (line);
+	z = 0;
+	y = 0;
+	first = 1;
+	limit = 0;
+	while (buffer[i] != '\n' || first == 1)
+	{
+		if (i > bytes_read || first == 1)
+		{
+			bytes_read = read(fd, buffer, BUFFER_SIZE);
+			i = 0;
+		}
+		while (buffer[limit] != '\n' && buffer[limit])
+				limit++;
+		if (first == 1)
+		{
+			str = (char *)malloc(sizeof(char) * (limit + 1));
+			first = 0;
+		}
+		if (buffer[i] == '\n')
+		{
+			while (i < bytes_read)
+			{
+				remainder[y] = buffer[i + 1];
+				y++;
+				i++;
+			}
+			str[i] = '\0';
+			return (str);
+		}
+		str = ft_strjoin(str, buffer, BUFFER_SIZE);
+		size = ft_strlen(str);
+		i = size;
+	}
+	str[i] = '\0';
+	return (str);
 }
 
 int	main(int argc, char **argv)
