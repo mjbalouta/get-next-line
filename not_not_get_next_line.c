@@ -1,15 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   get_next_line.c                                    :+:      :+:    :+:   */
+/*   not_not_get_next_line.c                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/28 22:55:55 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/04/30 11:13:29 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/04/30 18:22:25 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#include <stdio.h>
 #include "get_next_line.h"
 # define BUFFER_SIZE 3
 
@@ -19,7 +20,7 @@ char	*get_next_line(int fd)
 	int			i;
 	int			first;
 	char		*str;
-	int			z;
+	// int			z;
 	static char	remainder[BUFFER_SIZE];
 	int			y;
 	int			bytes_read;
@@ -27,13 +28,14 @@ char	*get_next_line(int fd)
 	int			size;
 
 	i = 0;
-	z = 0;
+	// z = 0;
 	y = 0;
 	first = 1;
 	limit = 0;
+	printf("%d", 1);
 	while (buffer[i] != '\n' || first == 1)
 	{
-		if (i > bytes_read || first == 1)
+		if (i >= bytes_read || first == 1)
 		{
 			bytes_read = read(fd, buffer, BUFFER_SIZE);
 			i = 0;
@@ -42,7 +44,7 @@ char	*get_next_line(int fd)
 				limit++;
 		if (first == 1)
 		{
-			str = (char *)malloc(sizeof(char) * (limit + 1));
+			str = (char *)malloc(sizeof(char) * (limit + 1)); // +1 para o null
 			first = 0;
 		}
 		if (buffer[i] == '\n')
@@ -53,12 +55,14 @@ char	*get_next_line(int fd)
 				y++;
 				i++;
 			}
+			printf("%s", remainder);
 			str[i] = '\0';
 			return (str);
 		}
 		str = ft_strjoin(str, buffer, BUFFER_SIZE);
 		size = ft_strlen(str);
 		i = size;
+	
 	}
 	str[i] = '\0';
 	return (str);

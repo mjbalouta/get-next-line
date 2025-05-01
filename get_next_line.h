@@ -13,6 +13,10 @@
 #ifndef GET_NEXT_LINE_H
 # define GET_NEXT_LINE_H
 
+#ifndef BUFFER_SIZE
+# define BUFFER_SIZE 1
+#endif
+
 # include <stddef.h>
 # include <unistd.h>
 # include <stdlib.h> 
@@ -24,8 +28,11 @@ char	*ft_strjoin(char const *s1, char const *s2);
 
 size_t	ft_strlen(const char *s);
 
-void	*ft_calloc(size_t nmemb, size_t size);
+void	ft_clean_array(char *ptr);
 
+int		ft_filling_line(char *line, int bytes_read, char *buffer, char *remain);
+
+// void	*ft_calloc(size_t nmemb, size_t size);
 
 
 
