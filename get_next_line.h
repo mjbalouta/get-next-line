@@ -30,9 +30,7 @@ size_t	ft_strlen(const char *s);
 
 void	ft_clean_array(char *ptr);
 
-int		ft_filling_line(char *line, int bytes_read, char *buffer, char *remain);
-
-// void	*ft_calloc(size_t nmemb, size_t size);
+void	*ft_calloc(size_t nmemb, size_t size);
 
 
 

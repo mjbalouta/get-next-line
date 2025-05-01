@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:54:30 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/01 11:59:03 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/01 12:44:22 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		j;
 
 	size = ft_strlen(s1) + ft_strlen(s2);
-	ptr = (char *)malloc((size + 1) * sizeof(char));
+	ptr = (char *)ft_calloc((size + 1) , sizeof(char));
 	if (!ptr)
 		return (NULL);
 	i = 0;
@@ -51,26 +51,26 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	}
 	return (ptr);
 }
-// void	*ft_calloc(size_t nmemb, size_t size)
-// {
-// 	void	*ptr;
-// 	size_t	i;
-// 	char	*temp;
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	void	*ptr;
+	size_t	i;
+	char	*temp;
 
-// 	i = 0;
-// 	if (size != 0 && nmemb > (__SIZE_MAX__ / size))
-// 		return (NULL);
-// 	ptr = malloc(nmemb * size);
-// 	if (ptr == NULL)
-// 		return (NULL);
-// 	temp = (char *)ptr; 
-// 	while (i < (nmemb * size))
-// 	{
-// 		temp[i] = '\0';
-// 		i++;
-// 	}	
-// 	return (ptr);
-// }
+	i = 0;
+	if (size != 0 && nmemb > (__SIZE_MAX__ / size))
+		return (NULL);
+	ptr = malloc(nmemb * size);
+	if (ptr == NULL)
+		return (NULL);
+	temp = (char *)ptr; 
+	while (i < (nmemb * size))
+	{
+		temp[i] = '\0';
+		i++;
+	}	
+	return (ptr);
+}
 
 void	ft_clean_array(char *ptr)
 {
@@ -84,40 +84,5 @@ void	ft_clean_array(char *ptr)
 	}
 }
 
-int	ft_filling_line(char *line, int bytes_read, char *buffer, char *remain)
-{
-	int	i;
-	int	z;
-	int found;
 
-	i = 0;
-	z = 0;
-	found = 0;
-	while (buffer[i] != '\n' && buffer[i] != '\0' && i < bytes_read)
-	{
-		line[i] = buffer[i];
-		i++;
-	}
-	line[i] = '\0';
-	if (i++ < bytes_read)
-	{
-		while (i < bytes_read)
-			remain[z++] = buffer[i++];
-		remain[z] = '\0';
-		found = 1;
-	}
-	return (found);
-}
-
-// void	ft_read_and_fill(int fd, char *result, char *line, char *remain)
-// {
-// 	int		bytes_read;
-// 	char	buffer[BUFFER_SIZE];
-	
-// 	bytes_read = read(fd, buffer, BUFFER_SIZE);
-// 		if (bytes_read < 0)
-// 			return (NULL);
-// 		if (bytes_read == 0)
-// 			return (result);
-// }
 
