@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:54:30 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/02 22:21:02 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/02 23:08:37 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	while (s1[i])
 	{
 		ptr[i] = s1[i];
-		i++;		
+		i++;
 	}
 	while (s2[j])
 	{
