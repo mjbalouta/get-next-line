@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:08:03 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/02 19:55:41 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/02 22:18:52 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,13 +98,15 @@ char	*get_next_line(int fd)
 // 	if (argc < 2)
 // 		return (write(2, "Error. Missing file or input.", 29));
 // 	int fd = open(argv[1], O_RDONLY);
-// 	char *line = get_next_line(fd);
-// 	int i;
-// 	while(i < 8216){
-		
+// 	char *line;
+// 	int i = 0;
+// 	while(i < 10){
+// 		line = get_next_line(fd);
+// 		printf("%s", line);
+// 		free(line);
+// 		i++;
 // 	}
-// 	printf("%s", line);
-// 	free(line);
+	
 // 	// line = get_next_line(fd);
 // 	// printf("%s", line);
 // 	// free(line);
