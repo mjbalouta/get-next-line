@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:54:30 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/02 23:08:37 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:22:15 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	{
 		ptr[i++] = s2[j++];
 	}
+	ptr[i] = '\0';
 	return (ptr);
 }
 
@@ -70,14 +71,12 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (ptr);
 }
 
-void	ft_clean_array(char *ptr)
+void	ft_free_arrays(char *remain, char *result, char *line)
 {
-	int	i;
-
-	i = 0;
-	while (ptr[i])
-	{
-		ptr[i] = '\0';
-		i++;
-	}
+	if (remain[0] != '\0')
+		free(remain);
+	if (result[0] != '\0')
+		free(result);
+	if (line[0] != '\0')
+		free(line);
 }

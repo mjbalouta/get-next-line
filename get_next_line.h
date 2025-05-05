@@ -28,8 +28,8 @@ char	*ft_strjoin(char const *s1, char const *s2);
 
 size_t	ft_strlen(const char *s);
 
-void	ft_clean_array(char *ptr);
-
 void	*ft_calloc(size_t nmemb, size_t size);
+
+void	ft_free_arrays(char *remain, char *result, char *line);
 
 #endif
