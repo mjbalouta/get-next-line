@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:08:03 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/05 15:59:34 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/05 16:10:41 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,16 @@ char	*ft_join_clean_free(char *result, char *str, int clean)
 	return (temp);
 }
 
+void	ft_free_arrays(char *remain, char *result, char *line)
+{
+	if (remain[0] != '\0')
+		free(remain);
+	if (result[0] != '\0')
+		free(result);
+	if (line[0] != '\0')
+		free(line);
+}
+
 char	*get_next_line(int fd)
 {
 	static char	*remain;
@@ -82,14 +92,10 @@ char	*get_next_line(int fd)
 	while (found == 2)
 	{
 		found = ft_read_and_fill(fd, line, remain);
-		if (found == -1)
+		if (found == -1 || (found == 0 && result[0] == '\0'))
 			return (ft_free_arrays(remain, result, line), NULL);
 		if (found == 0)
-		{
-			if (result[0] == '\0')
-				return (ft_free_arrays(remain, result, line), NULL);
 			return (result);
-		}
 		result = ft_join_clean_free(result, line, 1);
 	}
 	result = ft_join_clean_free(result, "\n", 0);
@@ -109,12 +115,6 @@ char	*get_next_line(int fd)
 // 		free(line);
 // 		i++;
 // 	}	
-// 	// line = get_next_line(fd);
-// 	// printf("%s", line);
-// 	// free(line);
-// 	// line = get_next_line(fd);
-// 	// printf("%s", line);
-// 	// free(line);
 // 	close(fd);
 // 	return (0);
 // }
