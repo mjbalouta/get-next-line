@@ -6,11 +6,12 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:08:03 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/05 15:26:27 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/05 15:33:25 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
+
 int	ft_filling_line(char *line, int b_read, char *buffer, char *remain)
 {
 	int	i;
@@ -62,6 +63,14 @@ char	*ft_join_clean_free(char *result, char *str, int clean)
 		free(str);
 	return (temp);
 }
+void	ft_initialize_arrays(char *remain, char *result, char *line)
+{
+	result = ft_calloc(1, sizeof(char));
+	remain = ft_calloc(1, sizeof(char));
+	line = ft_calloc(1, sizeof(char));
+	if (!remain || !result || !line)
+		return (NULL);
+}
 
 char	*get_next_line(int fd)
 {
@@ -71,20 +80,14 @@ char	*get_next_line(int fd)
 	char		*line;
 
 	found = 2;
-	result = ft_calloc(1, sizeof(char));
-	remain = ft_calloc(1, sizeof(char));
-	line = ft_calloc(1, sizeof(char));
-	if (!remain || !result || !line)
-		return (NULL);
+	ft_initialize_arrays(remain, result, line);
 	if (remain[0])
 		result = ft_join_clean_free(result, remain, 1);
 	while (found == 2)
 	{
 		found = ft_read_and_fill(fd, line, remain);
 		if (found == -1)
-		{
 			return (ft_free_arrays(remain, result, line), NULL);
-		}
 		if (found == 0)
 		{
 			if (result[0] == '\0')
