@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:08:03 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/06 15:30:58 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:18:26 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*ft_join_clean_free(char *result, char *str, int clean, int rem)
 			str[i++] = '\0';
 	}
 	i = 0;
-	//guardar a posicao do \n no remain e guardar a info no remain a partir desse /n
+	//guardar a posicao do \n no remain e guardar a info no remain a partir desse \n
 	if (rem)
 	{
 		while (result[i] != '\n')
@@ -39,10 +39,12 @@ int	ft_filling_line(char *line, int b_read, char *buffer, char **remain)
 {
 	int		i;
 	int		found;
+	int		z;
 
 	i = 0;
 	found = 2;
-	if (!line)
+	z = 0;
+	if (!line || !buffer)
 		return (-1);
 	while (buffer[i] != '\n' && buffer[i] != '\0' && i < b_read)
 	{
@@ -52,8 +54,14 @@ int	ft_filling_line(char *line, int b_read, char *buffer, char **remain)
 	//falta-me limitar o que vai para o remain ser ate ao \n
 	if (i < b_read)
 	{
-		if (remain[0])
-			*remain = ft_join_clean_free(*remain, &buffer[i + 1], 0, 1);
+		*remain = ft_calloc(b_read - i + 1, sizeof(char));
+		if (!*remain)
+			return (-1);
+		i++;
+		while (i < b_read && buffer[i] != '\n')
+			(*remain)[z++] = buffer[i++];
+		ft_clean_array(buffer);
+		*remain = *remain + z + 1;
 		found = 1;
 	}
 	return (found);
