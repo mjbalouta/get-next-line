@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:08:03 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/06 16:18:26 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/06 16:50:16 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,11 +26,11 @@ char	*ft_join_clean_free(char *result, char *str, int clean, int rem)
 			str[i++] = '\0';
 	}
 	i = 0;
-	//guardar a posicao do \n no remain e guardar a info no remain a partir desse \n
-	if (rem)
+	if (rem == 1)
 	{
 		while (result[i] != '\n')
 			result[i++] = '\0';
+		result = result + i + 1;
 	}
 	return (temp);
 }
@@ -51,20 +51,14 @@ int	ft_filling_line(char *line, int b_read, char *buffer, char **remain)
 		line[i] = buffer[i];
 		i++;
 	}
-	//falta-me limitar o que vai para o remain ser ate ao \n
 	if (i < b_read)
 	{
-		*remain = ft_calloc(b_read - i + 1, sizeof(char));
-		if (!*remain)
-			return (-1);
 		i++;
 		while (i < b_read && buffer[i] != '\n')
 			(*remain)[z++] = buffer[i++];
-		ft_clean_array(buffer);
-		*remain = *remain + z + 1;
 		found = 1;
 	}
-	return (found);
+	return (ft_clean_array(buffer), found);
 }
 
 int	ft_read_and_fill(int fd, char *line, char **remain)
@@ -113,7 +107,7 @@ char	*get_next_line(int fd)
 	found = 2;
 	result = ft_calloc(1, sizeof(char));
 	if (!remain)
-		remain = ft_calloc(1, sizeof(char));
+		remain = ft_calloc(BUFFER_SIZE, sizeof(char));
 	line = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!remain || !result || !line)
 		return (NULL);
@@ -123,7 +117,7 @@ char	*get_next_line(int fd)
 	{
 		found = ft_read_and_fill(fd, line, &remain);
 		if (found == -1 || (found == 0 && result[0] == '\0'))
-			return (ft_free_arrays(NULL, result, line), NULL);
+			return (ft_free_arrays(remain, result, line), NULL);
 		if (found == 0)
 			return (ft_free_arrays(remain, NULL, line), result);
 		result = ft_join_clean_free(result, line, 1, 0);
