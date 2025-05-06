@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:54:30 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/05 16:10:37 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/06 15:07:04 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	int		i;
 	int		j;
 
+	if (!s1 && !s2)
+		return (NULL); 
 	size = ft_strlen(s1) + ft_strlen(s2);
 	ptr = (char *)ft_calloc((size + 1), sizeof(char));
 	if (!ptr)
@@ -71,4 +73,14 @@ void	*ft_calloc(size_t nmemb, size_t size)
 	return (ptr);
 }
 
+void	ft_clean_array(char *ptr)
+{
+	int	i;
 
+	i = 0;
+	while (ptr[i])
+	{
+		ptr[i] = '\0';
+		i++;
+	}
+}

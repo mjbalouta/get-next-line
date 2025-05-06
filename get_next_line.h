@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1
+#  define BUFFER_SIZE 1024
 # endif
 
 # include <stddef.h>
@@ -29,5 +29,7 @@ char	*ft_strjoin(char const *s1, char const *s2);
 size_t	ft_strlen(const char *s);
 
 void	*ft_calloc(size_t nmemb, size_t size);
+
+void	ft_clean_array(char *ptr);
 
 #endif
