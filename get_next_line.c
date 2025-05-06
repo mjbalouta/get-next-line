@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:08:03 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/06 16:50:16 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/07 00:11:36 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,9 +28,12 @@ char	*ft_join_clean_free(char *result, char *str, int clean, int rem)
 	i = 0;
 	if (rem == 1)
 	{
-		while (result[i] != '\n')
-			result[i++] = '\0';
-		result = result + i + 1;
+		while (temp[i] != '\n')
+		{
+			temp[i] = '\0';
+			i++;
+		}
+		temp = temp + i + 1;
 	}
 	return (temp);
 }
@@ -54,7 +57,7 @@ int	ft_filling_line(char *line, int b_read, char *buffer, char **remain)
 	if (i < b_read)
 	{
 		i++;
-		while (i < b_read && buffer[i] != '\n')
+		while (i < b_read)
 			(*remain)[z++] = buffer[i++];
 		found = 1;
 	}
@@ -103,16 +106,33 @@ char	*get_next_line(int fd)
 	char		*result;
 	int			found;
 	char		*line;
+	int			i;
 
+	i = 0;
 	found = 2;
 	result = ft_calloc(1, sizeof(char));
 	if (!remain)
-		remain = ft_calloc(BUFFER_SIZE, sizeof(char));
+		remain = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	line = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!remain || !result || !line)
 		return (NULL);
 	if (remain[0])
-		result = ft_join_clean_free(result, remain, 1, 0);
+	{
+		free(result);
+		result = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+		while (remain[i] && remain[i] != '\n' && i < BUFFER_SIZE)
+		{
+			result[i] = remain[i];
+			i++;
+		}
+		if (remain[i] == '\n')
+		{
+			found = 1;
+			//como avanço o remain para remain + i e depois dou free do remain mais abaixo?
+		}
+		// result = ft_join_clean_free(result, remain, 1, 0);
+		// remain = remain + ft_strlen(result);
+	}
 	while (found == 2)
 	{
 		found = ft_read_and_fill(fd, line, &remain);
