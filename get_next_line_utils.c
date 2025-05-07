@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:54:30 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/07 12:19:41 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/07 13:53:56 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,13 +85,8 @@ void	ft_clean_array(char *ptr)
 	}
 }
 
-void	ft_free_arrays(char *temp, char *result, char *line)
+void	ft_free_arrays(char *result, char *line)
 {
-	if (temp)
-	{
-		free(temp);
-		temp = NULL;
-	}
 	if (result)
 	{
 		free(result);
