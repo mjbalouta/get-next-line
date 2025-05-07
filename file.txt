@@ -1,7 +1,3 @@
 
-
-The Internet Movie Script Database (IMSDb)
-
-
-The web's largest
-movie script resource!
+	
+               INT. REBEL BLOCKADE RUNNER - MAIN PASSAGEWAY

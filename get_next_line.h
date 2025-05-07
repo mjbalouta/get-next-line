@@ -14,7 +14,7 @@
 # define GET_NEXT_LINE_H
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1024
+#  define BUFFER_SIZE 42
 # endif
 
 # include <stddef.h>
@@ -32,4 +32,5 @@ void	*ft_calloc(size_t nmemb, size_t size);
 
 void	ft_clean_array(char *ptr);
 
+void	ft_free_arrays(char *temp, char *result, char *line);
 #endif

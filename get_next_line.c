@@ -6,34 +6,25 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:08:03 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/07 00:11:36 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/07 13:06:08 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_join_clean_free(char *result, char *str, int clean, int rem)
+char	*ft_join_clean_free(char *result, char *str, int clean)
 {
 	char	*temp;
 	int		i;
 
 	i = 0;
 	temp = ft_strjoin(result, str);
-	free(result);
+	free(result); //SEG FAULT
+	result = NULL; 
 	if (clean)
 	{
 		while (str[i])
 			str[i++] = '\0';
-	}
-	i = 0;
-	if (rem == 1)
-	{
-		while (temp[i] != '\n')
-		{
-			temp[i] = '\0';
-			i++;
-		}
-		temp = temp + i + 1;
 	}
 	return (temp);
 }
@@ -56,6 +47,7 @@ int	ft_filling_line(char *line, int b_read, char *buffer, char **remain)
 	}
 	if (i < b_read)
 	{
+		ft_clean_array(*remain);
 		i++;
 		while (i < b_read)
 			(*remain)[z++] = buffer[i++];
@@ -81,25 +73,6 @@ int	ft_read_and_fill(int fd, char *line, char **remain)
 	return (found);
 }
 
-void	ft_free_arrays(char *remain, char *result, char *line)
-{
-	if (remain)
-	{
-		free(remain);
-		remain = NULL;
-	}
-	if (result)
-	{
-		free(result);
-		result = NULL;
-	}
-	if (line)
-	{
-		free(line);
-		line = NULL;
-	}
-}
-
 char	*get_next_line(int fd)
 {
 	static char	*remain;
@@ -107,14 +80,18 @@ char	*get_next_line(int fd)
 	int			found;
 	char		*line;
 	int			i;
+	char		*temp;
+	int			z;
 
 	i = 0;
+	z = 0;
 	found = 2;
 	result = ft_calloc(1, sizeof(char));
 	if (!remain)
 		remain = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	temp = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	line = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!remain || !result || !line)
+	if (!remain || !result || !line || !temp)
 		return (NULL);
 	if (remain[0])
 	{
@@ -128,21 +105,31 @@ char	*get_next_line(int fd)
 		if (remain[i] == '\n')
 		{
 			found = 1;
-			//como avanço o remain para remain + i e depois dou free do remain mais abaixo?
+			i++;
+			while (remain[i])
+				temp[z++] = remain[i++];
+			ft_clean_array(remain);
+			remain = temp;
 		}
-		// result = ft_join_clean_free(result, remain, 1, 0);
-		// remain = remain + ft_strlen(result);
 	}
 	while (found == 2)
 	{
 		found = ft_read_and_fill(fd, line, &remain);
 		if (found == -1 || (found == 0 && result[0] == '\0'))
-			return (ft_free_arrays(remain, result, line), NULL);
+		{
+			free(remain);
+			remain = NULL;
+			return (ft_free_arrays(temp, result, line), NULL);
+		}
 		if (found == 0)
-			return (ft_free_arrays(remain, NULL, line), result);
-		result = ft_join_clean_free(result, line, 1, 0);
+		{
+			free(remain);
+			remain = NULL;
+			return (ft_free_arrays(temp, NULL, line), result);
+		}
+		result = ft_join_clean_free(result, line, 1);
 	}
-	result = ft_join_clean_free(result, "\n", 0, 0);
+	result = ft_join_clean_free(result, "\n", 0);
 	return (ft_free_arrays(NULL, NULL, line), result);
 }
 #include <stdio.h>
