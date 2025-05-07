@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:08:03 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/07 17:28:01 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/07 20:27:36 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ char	*ft_join_clean_free(char *result, char *str, int clean)
 
 	i = 0;
 	temp = ft_strjoin(result, str);
-	free(result); //SEG FAULT
+	free(result); 
 	result = NULL; 
 	if (clean)
 	{
@@ -29,45 +29,58 @@ char	*ft_join_clean_free(char *result, char *str, int clean)
 	return (temp);
 }
 
-int	ft_filling_line(char *line, int b_read, char *buffer, char **remain)
-{
-	int		i;
-	int		found;
-	int		z;
-
-	i = 0;
-	found = 2;
-	z = 0;
-	while (i < b_read && buffer[i] != '\n' && buffer[i] != '\0')
-	{
-		line[i] = buffer[i];
-		i++;
-	}
-	if (i < b_read)
-	{
-		ft_clean_array(*remain);
-		i++;
-		while (i < b_read)
-			(*remain)[z++] = buffer[i++];
-		found = 1;
-	}
-	return (ft_clean_array(buffer), found);
-}
-
-int	ft_read_and_fill(int fd, char *line, char **remain)
+int	ft_read_and_fill(int fd, char *line, char **remain, int found)
 {
 	int		bytes_read;
-	char	buffer[BUFFER_SIZE + 1] = {0};
-	int		found;
+	char	*buffer;
+	int		i;
+	int		z;
 
-	found = 0;
-	bytes_read = read(fd, buffer, BUFFER_SIZE);
-	buffer[bytes_read] = '\0';
-	if (bytes_read < 0)
+	i = -1;
+	z = 0;
+	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if(!buffer)
 		return (-1);
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	if (bytes_read < 0)
+		return (ft_free_arrays(buffer, NULL), -1);
 	if (bytes_read == 0)
-		return (0);	
-	found = ft_filling_line(line, bytes_read, buffer, remain);
+		return (ft_free_arrays(buffer, NULL), 0);	
+	while (++i < bytes_read && buffer[i] != '\n' && buffer[i] != '\0')
+		line[i] = buffer[i];
+	if (i < bytes_read)
+	{
+		ft_clean_array(*remain);
+		while (++i < bytes_read)
+			(*remain)[z++] = buffer[i];
+		found = 1;
+	}
+	return (ft_free_arrays(buffer, NULL), found);
+}
+
+int	ft_fill_w_remain(char *result, char **remain, int found)
+{
+	int	i;
+	int	z;
+
+	i = 0;
+	z = 0;
+	if (!result)
+		return (-1);
+	while ((*remain)[i] && (*remain)[i] != '\n' && i < BUFFER_SIZE)
+	{
+		result[i] = (*remain)[i];
+		i++;
+	}
+	if ((*remain)[i] == '\n')
+	{
+		found = 1;
+		i++;
+		while ((*remain)[i])
+			(*remain)[z++] = (*remain)[i++];
+		while (z < BUFFER_SIZE + 1)
+			(*remain)[z++] = 0;
+	}
 	return (found);
 }
 
@@ -77,42 +90,19 @@ char	*get_next_line(int fd)
 	char		*result;
 	int			found;
 	char		*line;
-	int			i;
-	int			z;
 
-	i = 0;
-	z = 0;
 	found = 2;
-	result = ft_calloc(1, sizeof(char));
-	// if (fd < -1 || BUFFER_SIZE <= 0)
-	// 	return(NULL);
+	result = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!remain)
 		remain = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	line = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!remain || !result || !line)
 		return (NULL);
 	if (remain[0])
-	{
-		free(result);
-		result = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-		while (remain[i] && remain[i] != '\n' && i < BUFFER_SIZE)
-		{
-			result[i] = remain[i];
-			i++;
-		}
-		if (remain[i] == '\n')
-		{
-			found = 1;
-			i++;
-			while (remain[i])
-				remain[z++] = remain[i++];
-			while (z < BUFFER_SIZE + 1)
-				remain[z++] = 0;
-		}
-	}
+		found = ft_fill_w_remain(result, &remain, found);
 	while (found == 2)
 	{
-		found = ft_read_and_fill(fd, line, &remain);
+		found = ft_read_and_fill(fd, line, &remain, found);
 		if (found == -1 || (found == 0 && result[0] == '\0'))
 		{
 			free(remain);
