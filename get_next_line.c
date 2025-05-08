@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:08:03 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/08 16:12:56 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/08 17:00:08 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ char	*ft_fill_line(int bytes_read, char *buffer, char **remain, int *found)
 	char	*line;
 	int		i;
 	int		z;
-	
+
 	i = -1;
 	z = 0;
 	line = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
@@ -41,9 +41,9 @@ char	*ft_read_and_fill(int fd, char *result, char **remain, int *found)
 	int		bytes_read;
 	char	*buffer;
 	char	*line;
-	
+
 	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if(!buffer)
+	if (!buffer)
 		return (NULL);
 	bytes_read = read(fd, buffer, BUFFER_SIZE);
 	if (bytes_read < 0)
@@ -117,18 +117,21 @@ char	*get_next_line(int fd)
 	}
 	return (result);
 }
-#include <stdio.h>
-int	main(int argc, char **argv)
-{	
-	if (argc < 2)
-		return (write(2, "Error. Missing file or input.", 29));
-	int fd = open(argv[1], O_RDONLY);
-	char *line;
-	while((line = get_next_line(fd)))
-	{
-		printf("%s", line);
-		free(line);
-	}	
-	close(fd);
-	return (0);
-}
+// #include <stdio.h>
+// int	main(int argc, char **argv)
+// {	
+// 	if (argc < 2)
+// 		return (write(2, "Error. Missing file or input.", 29));
+// 	(void)argv;
+// 	// int fd = open("/dev/stdin", O_RDONLY); teste stdin
+// 	int fd = open(argv[1], O_RDONLY);
+// 	char *line;
+// 	while((line = get_next_line(fd)))
+// 	{
+// 		printf("%s", line);
+// 		free(line);
+// 	}
+// 	if(fd >= 0)
+// 		close(fd);
+// 	return (0);
+// }

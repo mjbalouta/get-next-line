@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:54:30 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/08 16:04:23 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/08 16:59:52 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,14 @@ char	*ft_strjoin(char *s1, char *s2)
 	int		j;
 
 	if (!s1 && !s2)
-		return (NULL); 
+		return (NULL);
 	size = ft_strlen(s1) + ft_strlen(s2);
 	ptr = (char *)ft_calloc((size + 1), sizeof(char));
 	if (!ptr)
 		return (NULL);
 	i = 0;
 	j = 0;
-	while (s1[i]) 
+	while (s1[i])
 	{
 		ptr[i] = s1[i];
 		i++;
