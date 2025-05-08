@@ -6,16 +6,15 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:08:03 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/08 14:42:10 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/08 16:12:56 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_join_result_line(char *result, int bytes_read, char *buffer, char **remain, int *found)
+char	*ft_fill_line(int bytes_read, char *buffer, char **remain, int *found)
 {
 	char	*line;
-	char	*temp;
 	int		i;
 	int		z;
 	
@@ -34,15 +33,14 @@ char	*ft_join_result_line(char *result, int bytes_read, char *buffer, char **rem
 			(*remain)[z++] = buffer[i];
 		*found = 1;
 	}
-	temp = ft_strjoin(result, line);
-	ft_free_arrays(result, line);
-	return (temp);
+	return (line);
 }
 
 char	*ft_read_and_fill(int fd, char *result, char **remain, int *found)
 {
 	int		bytes_read;
 	char	*buffer;
+	char	*line;
 	
 	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if(!buffer)
@@ -62,8 +60,9 @@ char	*ft_read_and_fill(int fd, char *result, char **remain, int *found)
 		}
 		return (ft_free_arrays(buffer, NULL), result);
 	}
-	result = ft_join_result_line(result, bytes_read, buffer, remain, found);
-	return (ft_free_arrays(buffer, NULL), result);
+	line = ft_fill_line(bytes_read, buffer, remain, found);
+	result = ft_strjoin(result, line);
+	return (ft_free_arrays(buffer, line), result);
 }
 
 void	ft_fill_w_remain(char *result, char **remain, int *found)
@@ -96,7 +95,7 @@ char	*get_next_line(int fd)
 	char		*result;
 	int			found;
 
-	if (fd < 0 || BUFFER_SIZE <= 0)
+	if (fd < 0 || BUFFER_SIZE < 0)
 		return (NULL);
 	found = 2;
 	result = ft_calloc(BUFFER_SIZE + 1, sizeof(char));

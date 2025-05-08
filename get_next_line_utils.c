@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:54:30 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/08 14:29:48 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/08 16:04:23 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ size_t	ft_strlen(const char *s)
 	return (i);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char	*ft_strjoin(char *s1, char *s2)
 {
 	int		size;
 	char	*ptr;
@@ -49,6 +49,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 		ptr[i++] = s2[j++];
 	}
 	ptr[i] = '\0';
+	free(s1);
 	return (ptr);
 }
 
