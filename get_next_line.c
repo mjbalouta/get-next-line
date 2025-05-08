@@ -6,67 +6,73 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:08:03 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/07 23:29:09 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/08 14:42:10 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-char	*ft_join_clean_free(char *result, char *str, int clean)
+char	*ft_join_result_line(char *result, int bytes_read, char *buffer, char **remain, int *found)
 {
+	char	*line;
 	char	*temp;
 	int		i;
-
-	i = 0;
-	temp = ft_strjoin(result, str);
-	free(result); 
-	result = NULL; 
-	if (clean)
-	{
-		while (str[i])
-			str[i++] = '\0';
-	}
-	return (temp);
-}
-
-int	ft_read_and_fill(int fd, char *line, char **remain, int found)
-{
-	int		bytes_read;
-	char	*buffer;
-	int		i;
 	int		z;
-
+	
 	i = -1;
 	z = 0;
-	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if(!buffer)
-		return (-1);
-	bytes_read = read(fd, buffer, BUFFER_SIZE);
-	if (bytes_read < 0)
-		return (ft_free_arrays(buffer, NULL), -1);
-	if (bytes_read == 0)
-		return (ft_free_arrays(buffer, NULL), 0);	
+	line = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (!line)
+		return (NULL);
 	while (++i < bytes_read && buffer[i] != '\n' && buffer[i] != '\0')
 		line[i] = buffer[i];
-	if (i < bytes_read)
+	if (buffer[i] == '\n')
 	{
+		line[i] = '\n';
 		ft_clean_array(*remain);
 		while (++i < bytes_read)
 			(*remain)[z++] = buffer[i];
-		found = 1;
+		*found = 1;
 	}
-	return (ft_free_arrays(buffer, NULL), found);
+	temp = ft_strjoin(result, line);
+	ft_free_arrays(result, line);
+	return (temp);
 }
 
-int	ft_fill_w_remain(char *result, char **remain, int found)
+char	*ft_read_and_fill(int fd, char *result, char **remain, int *found)
 {
-	int	i;
-	int	z;
+	int		bytes_read;
+	char	*buffer;
+	
+	buffer = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if(!buffer)
+		return (NULL);
+	bytes_read = read(fd, buffer, BUFFER_SIZE);
+	if (bytes_read < 0)
+		return (ft_free_arrays(buffer, NULL), NULL);
+	if (bytes_read == 0)
+	{
+		free(*remain);
+		*remain = NULL;
+		*found = 0;
+		if (result[0] == '\0')
+		{
+			free(result);
+			result = NULL;
+		}
+		return (ft_free_arrays(buffer, NULL), result);
+	}
+	result = ft_join_result_line(result, bytes_read, buffer, remain, found);
+	return (ft_free_arrays(buffer, NULL), result);
+}
+
+void	ft_fill_w_remain(char *result, char **remain, int *found)
+{
+	int		i;
+	int		z;
 
 	i = 0;
 	z = 0;
-	if (!result)
-		return (-1);
 	while ((*remain)[i] && (*remain)[i] != '\n' && i < BUFFER_SIZE)
 	{
 		result[i] = (*remain)[i];
@@ -74,14 +80,14 @@ int	ft_fill_w_remain(char *result, char **remain, int found)
 	}
 	if ((*remain)[i] == '\n')
 	{
-		found = 1;
+		result[i] = '\n';
+		*found = 1;
 		i++;
 		while ((*remain)[i])
 			(*remain)[z++] = (*remain)[i++];
 		while (z < BUFFER_SIZE + 1)
 			(*remain)[z++] = 0;
 	}
-	return (found);
 }
 
 char	*get_next_line(int fd)
@@ -89,36 +95,28 @@ char	*get_next_line(int fd)
 	static char	*remain;
 	char		*result;
 	int			found;
-	char		*line;
 
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 	found = 2;
 	result = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
 	if (!remain)
 		remain = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	line = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!remain || !result || !line)
-		return (NULL);
+	if (!remain || !result)
+		return (free(result), NULL);
 	if (remain[0])
-		found = ft_fill_w_remain(result, &remain, found);
+		ft_fill_w_remain(result, &remain, &found);
 	while (found == 2)
 	{
-		found = ft_read_and_fill(fd, line, &remain, found);
-		if (found == -1 || (found == 0 && result[0] == '\0'))
+		result = ft_read_and_fill(fd, result, &remain, &found);
+		if (result == NULL)
 		{
 			free(remain);
 			remain = NULL;
-			return (ft_free_arrays(result, line), NULL);
+			return (ft_free_arrays(result, NULL), NULL);
 		}
-		if (found == 0)
-		{
-			free(remain);
-			remain = NULL;
-			return (ft_free_arrays(NULL, line), result);
-		}
-		result = ft_join_clean_free(result, line, 1);
 	}
-	result = ft_join_clean_free(result, "\n", 0);
-	return (ft_free_arrays(NULL, line), result);
+	return (result);
 }
 #include <stdio.h>
 int	main(int argc, char **argv)
