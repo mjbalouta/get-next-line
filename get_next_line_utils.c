@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/29 11:54:30 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/08 16:59:52 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/09 13:25:25 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,8 @@ size_t	ft_strlen(const char *s)
 {
 	size_t	i;
 
+	if (!s)
+		return (0);
 	i = 0;
 	while (s[i])
 	{
@@ -39,17 +41,17 @@ char	*ft_strjoin(char *s1, char *s2)
 		return (NULL);
 	i = 0;
 	j = 0;
-	while (s1[i])
+	while (s1 && s1[i])
 	{
 		ptr[i] = s1[i];
 		i++;
 	}
-	while (s2[j])
+	while (s2 && s2[j])
 	{
 		ptr[i++] = s2[j++];
 	}
-	ptr[i] = '\0';
-	free(s1);
+	if (s1)
+		free(s1);
 	return (ptr);
 }
 

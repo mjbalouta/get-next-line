@@ -6,7 +6,7 @@
 /*   By: mjoao-fr <mjoao-fr@student.42porto.com>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/04/30 12:08:03 by mjoao-fr          #+#    #+#             */
-/*   Updated: 2025/05/08 17:00:08 by mjoao-fr         ###   ########.fr       */
+/*   Updated: 2025/05/09 13:30:28 by mjoao-fr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ char	*ft_read_and_fill(int fd, char *result, char **remain, int *found)
 		free(*remain);
 		*remain = NULL;
 		*found = 0;
-		if (result[0] == '\0')
+		if (!result)
 		{
 			free(result);
 			result = NULL;
@@ -65,13 +65,16 @@ char	*ft_read_and_fill(int fd, char *result, char **remain, int *found)
 	return (ft_free_arrays(buffer, line), result);
 }
 
-void	ft_fill_w_remain(char *result, char **remain, int *found)
+char	*ft_fill_w_remain(char *result, char **remain, int *found)
 {
 	int		i;
 	int		z;
 
 	i = 0;
 	z = 0;
+	result = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	if (!result)
+		return (NULL);
 	while ((*remain)[i] && (*remain)[i] != '\n' && i < BUFFER_SIZE)
 	{
 		result[i] = (*remain)[i];
@@ -87,6 +90,7 @@ void	ft_fill_w_remain(char *result, char **remain, int *found)
 		while (z < BUFFER_SIZE + 1)
 			(*remain)[z++] = 0;
 	}
+	return (result);
 }
 
 char	*get_next_line(int fd)
@@ -98,13 +102,13 @@ char	*get_next_line(int fd)
 	if (fd < 0 || BUFFER_SIZE < 0)
 		return (NULL);
 	found = 2;
-	result = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
+	result = NULL;
 	if (!remain)
 		remain = ft_calloc(BUFFER_SIZE + 1, sizeof(char));
-	if (!remain || !result)
-		return (free(result), NULL);
+	if (!remain)
+		return (NULL);
 	if (remain[0])
-		ft_fill_w_remain(result, &remain, &found);
+		result = ft_fill_w_remain(result, &remain, &found);
 	while (found == 2)
 	{
 		result = ft_read_and_fill(fd, result, &remain, &found);
@@ -117,15 +121,18 @@ char	*get_next_line(int fd)
 	}
 	return (result);
 }
+
 // #include <stdio.h>
 // int	main(int argc, char **argv)
 // {	
+// 	char *line;
 // 	if (argc < 2)
 // 		return (write(2, "Error. Missing file or input.", 29));
 // 	(void)argv;
-// 	// int fd = open("/dev/stdin", O_RDONLY); teste stdin
+// 	// int fd = open("/dev/stdin", O_RDONLY);
+// 	// line = get_next_line(fd);
+// 	// printf("%s", line);
 // 	int fd = open(argv[1], O_RDONLY);
-// 	char *line;
 // 	while((line = get_next_line(fd)))
 // 	{
 // 		printf("%s", line);

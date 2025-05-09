@@ -33,4 +33,5 @@ void	*ft_calloc(size_t nmemb, size_t size);
 void	ft_clean_array(char *ptr);
 
 void	ft_free_arrays(char *result, char *line);
+
 #endif
